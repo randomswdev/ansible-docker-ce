@@ -36,9 +36,9 @@
       dest: /etc/systemd/system/docker.service.d/http-proxy.conf
       content: |
         [Service]
-        Environment="{{ansible_env.HTTP_PROXY}}"
-        Environment="{{ansible_env.HTTPS_PROXY}}"
-        Environment="{{ansible_env.NO_PROXY}}"
+        Environment="HTTP_PROXY={{ansible_env.HTTP_PROXY}}"
+        Environment="HTTPS_PROXY={{ansible_env.HTTPS_PROXY}}"
+        Environment="NO_PROXY={{ansible_env.NO_PROXY}}"
     when: ansible_env.HTTPS_PROXY is defined and ansible_env.HTTPS_PROXY != "" and ansible_env.HTTP_PROXY is defined and ansible_env.HTTP_PROXY != "" and ansible_env.NO_PROXY is defined and ansible_env.NO_PROXY != "" and skip_docker_systemd_proxy_config is not defined
 
 - block:
