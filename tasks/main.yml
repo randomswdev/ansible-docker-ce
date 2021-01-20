@@ -37,7 +37,7 @@
       content: |
         [Service]
         Environment="HTTPS_PROXY={{ansible_env.HTTPS_PROXY}}" "HTTP_PROXY={{ansible_env.HTTP_PROXY}}" "NO_PROXY={{ansible_env.NO_PROXY}}"
-  when: ansible_env.HTTPS_PROXY is defined and ansible_env.HTTPS_PROXY != "" and ansible_env.HTTP_PROXY is defined and ansible_env.HTTP_PROXY != "" and ansible_env.NO_PROXY is defined and ansible_env.NO_PROXY != ""
+  when: ansible_env.HTTPS_PROXY is defined and ansible_env.HTTPS_PROXY != "" and ansible_env.HTTP_PROXY is defined and ansible_env.HTTP_PROXY != "" and ansible_env.NO_PROXY is defined and ansible_env.NO_PROXY != "" and skip_proxy_config is not defined
 
 - name: start docker-ce
   service:
