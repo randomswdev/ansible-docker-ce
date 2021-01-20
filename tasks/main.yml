@@ -26,18 +26,41 @@
     state: present
 
 - block:
-  - name: Create the proxy config folder
+  - name: Create the systemd proxy config folder
     file:
       path: /etc/systemd/system/docker.service.d
       state: directory
 
-  - name: Create the proxy config file
+  - name: Create the systemd proxy config file
     copy:
       dest: /etc/systemd/system/docker.service.d/http-proxy.conf
       content: |
         [Service]
-        Environment="HTTPS_PROXY={{ansible_env.HTTPS_PROXY}}" "HTTP_PROXY={{ansible_env.HTTP_PROXY}}" "NO_PROXY={{ansible_env.NO_PROXY}}"
-  when: ansible_env.HTTPS_PROXY is defined and ansible_env.HTTPS_PROXY != "" and ansible_env.HTTP_PROXY is defined and ansible_env.HTTP_PROXY != "" and ansible_env.NO_PROXY is defined and ansible_env.NO_PROXY != "" and skip_proxy_config is not defined
+        Environment="{{ansible_env.HTTP_PROXY}}"
+        Environment="{{ansible_env.HTTPS_PROXY}}"
+        Environment="{{ansible_env.NO_PROXY}}"
+    when: ansible_env.HTTPS_PROXY is defined and ansible_env.HTTPS_PROXY != "" and ansible_env.HTTP_PROXY is defined and ansible_env.HTTP_PROXY != "" and ansible_env.NO_PROXY is defined and ansible_env.NO_PROXY != "" and skip_docker_systemd_proxy_config is not defined
+
+- block:
+  - name: Create the user proxy config folder
+    file:
+      path: "{{ user_home }}/.docker"
+      state: directory
+
+  - name: Create the user proxy config file
+    copy:
+      dest: "{{ user_home }}/.docker/config.json"
+      content: |
+        {
+          "proxies": {
+            "default": {
+              "httpProxy": "{{ansible_env.HTTP_PROXY}}",
+              "httpsProxy": "{{ansible_env.HTTPS_PROXY}}",
+              "noProxy": "{{ansible_env.NO_PROXY}}"
+            }
+          }
+        }
+  when: ansible_env.HTTPS_PROXY is defined and ansible_env.HTTPS_PROXY != "" and ansible_env.HTTP_PROXY is defined and ansible_env.HTTP_PROXY != "" and ansible_env.NO_PROXY is defined and ansible_env.NO_PROXY != "" and skip_docker_user_proxy_config is not defined
 
 - name: start docker-ce
   service:
