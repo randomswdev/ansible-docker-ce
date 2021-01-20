@@ -44,12 +44,12 @@
 - block:
   - name: Create the user proxy config folder
     file:
-      path: "{{ user_home }}/.docker"
+      path: "{{ ansible_env.HOME }}/.docker"
       state: directory
 
   - name: Create the user proxy config file
     copy:
-      dest: "{{ user_home }}/.docker/config.json"
+      dest: "{{ ansible_env.HOME }}/.docker/config.json"
       content: |
         {
           "proxies": {
