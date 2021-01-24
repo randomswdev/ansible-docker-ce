@@ -71,7 +71,7 @@
 - name: Install pip
   shell: |
     set -o pipefail
-    curl -skL https://bootstrap.pypa.io/get-pip.py | python -
+    curl -skL https://bootstrap.pypa.io/2.7/get-pip.py | python -
   args:
     executable: "/bin/bash"
     creates: "/bin/pip"
